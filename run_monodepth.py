@@ -174,12 +174,13 @@ def run(input_path, output_path, model_path, model_type="dpt_hybrid", optimize=T
             output_path, os.path.splitext(os.path.basename(img_name))[0]
         )
         # util.io.write_depth(filename, prediction, bits=2)
+        cv2.imwrite(filename+ "_" + model_type + ".png" , np.uint8(plt.cm.jet(prediction/prediction.max())*255))
 
         prediction  = 6000*(1/prediction)
         prediction = np.clip(prediction,0,15)
-        prediction_inv = 1/prediction
+        with open(filename + ".bin" , "wb") as f:
+            f.write(bytearray(prediction))
         
-        cv2.imwrite(filename+ "_" + model_type + ".png" , np.uint8(plt.cm.jet(prediction_inv/1)*255))
 
 
     print("finished")
