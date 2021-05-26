@@ -9,7 +9,7 @@ import argparse
 import util.io
 
 from torchvision.transforms import Compose
-
+import  numpy as np
 from dpt.models import DPTDepthModel
 from dpt.midas_net import MidasNet_large
 from dpt.transforms import Resize, NormalizeImage, PrepareForNet
@@ -171,7 +171,14 @@ def run(input_path, output_path, model_path, model_type="dpt_hybrid", optimize=T
         filename = os.path.join(
             output_path, os.path.splitext(os.path.basename(img_name))[0]
         )
-        util.io.write_depth(filename, prediction, bits=2)
+        # util.io.write_depth(filename, prediction, bits=2)
+
+        prediction  = 6000*(1/prediction)
+        prediction = np.clip(prediction,0,15)
+        prediction_inv = 1/prediction
+        im_color = cv2.applyColorMap(prediction_inv, cv2.COLORMAP_JET)
+        cv2.imwrite(filename+ "_" + model_type + ".png" , im_color)
+
 
     print("finished")
 
