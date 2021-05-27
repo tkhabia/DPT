@@ -173,13 +173,18 @@ def run(input_path, output_path, model_path, model_type="dpt_hybrid", optimize=T
         filename = os.path.join(
             output_path, os.path.splitext(os.path.basename(img_name))[0]
         )
+        with open(filename + ".bin" , "wb") as f:
+            f.write(bytearray(prediction))
         # util.io.write_depth(filename, prediction, bits=2)
-        cv2.imwrite(filename+ "_" + model_type + ".png" , np.uint8(plt.cm.jet(prediction/prediction.max())*255))
+        if model_type == "dpt_hybrid":
+            cv2.imwrite(filename+ "_" + model_type + ".png" , np.uint8(plt.cm.jet(prediction/1380)*255))
+        elif model_type == "dpt_large":
+            cv2.imwrite(filename+ "_" + model_type + ".png" , np.uint8(plt.cm.jet(prediction/22.5)*255))
+
 
         prediction  = 6000*(1/prediction)
         prediction = np.clip(prediction,0,15)
-        with open(filename + ".bin" , "wb") as f:
-            f.write(bytearray(prediction))
+        
         
 
 
