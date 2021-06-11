@@ -109,7 +109,7 @@ def run(input_path, output_path, model_path, model_type="dpt_hybrid", optimize=T
         filename = os.path.join(
             output_path, os.path.splitext(os.path.basename(img_name))[0]
         )
-        util.io.write_segm_img(filename, img, prediction, alpha=0.8)
+        util.io.write_segm_img(filename, img, prediction, alpha=0.7)
 
     print("finished")
 
