@@ -204,10 +204,14 @@ def write_segm_img(path, image, labels, palette="detail", alpha=0.5):
         labels (array): labeling of the image
     """
     relevant_labels = [1 ,16,20,13]
+    replaceable = {11:16, 24:20 ,31:20 ,34:16 , 46:16,54:1,60:1, 111:20 }
     for i in range(len(labels)):
         for j in range(len(labels[0])):
             if labels[i,  j ] not in relevant_labels:
-                labels[i ,j  ] = 0 
+                if replaceable.get(labels[i, j] ) == None:
+                    labels[i ,j  ] = 0 
+                else :
+                    labels[i,j]  = replaceable[labels[i, j ]]
     mask = get_mask_pallete(labels, "ade20k").save(path + ".png")
 
     # img = Image.fromarray(np.uint8(255*image)).convert("RGBA")
